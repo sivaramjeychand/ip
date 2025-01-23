@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class TodoList {
+public class Task {
     private List<String> items;
     private List<Boolean> marked;
 
-    public TodoList() {
+    public Task() {
         items = new ArrayList<>();
         marked = new ArrayList<>();
     }

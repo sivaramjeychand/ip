@@ -7,26 +7,26 @@ public class HamiltonianGuy {
         System.out.println("Hello from I'm HamiltonianGuy");
         System.out.println("What can I do for you?");
         System.out.println("______________________________________");
-        TodoList todoList = new TodoList();
+        Task t = new Task();
 
         while (true) {
             String s = sc.nextLine();
             if (s.equals("bye")) {
                 break;
             } else if (s.equals("list")) {
-                todoList.printList();
+                t.printList();
             } else if (s.startsWith("mark ")) {
                 int index = Integer.parseInt(s.split(" ")[1]) - 1;
-                todoList.markItem(index);
+                t.markItem(index);
                 System.out.println("      Nice! I've marked this task as done: " );
-                todoList.printElement(index);
+                t.printElement(index);
             } else if (s.startsWith("unmark ")) {
                 int index = Integer.parseInt(s.split(" ")[1]) - 1;
-                todoList.unmarkItem(index);
+                t.unmarkItem(index);
                 System.out.println("      OK, I've marked this task as not done yet:" );
-                todoList.printElement(index);
+                t.printElement(index);
             } else {
-                todoList.addItem(s);
+                t.addItem(s);
                 System.out.println("      added: " + s);
             }
         }
