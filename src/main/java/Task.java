@@ -8,10 +8,16 @@ public abstract class Task {
     }
 
     public void mark() {
+        if (isDone) {
+            throw new IllegalStateException("OOPS!!! This task is already marked as done.");
+        }
         this.isDone = true;
     }
 
     public void unmark() {
+        if (!isDone) {
+            throw new IllegalStateException("OOPS!!! This task is not marked as done yet.");
+        }
         this.isDone = false;
     }
 
