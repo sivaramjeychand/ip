@@ -1,45 +1,26 @@
-import java.util.ArrayList;
-import java.util.List;
+public abstract class Task {
+    private String desc;
+    private boolean isDone;
 
-public class Task {
-    private List<String> items;
-    private List<Boolean> marked;
-
-    public Task() {
-        items = new ArrayList<>();
-        marked = new ArrayList<>();
+    public Task(String desc) {
+        this.desc = desc;
+        this.isDone = false;
     }
 
-    public void addItem(String item) {
-        items.add(item);
-        marked.add(false);  // Initialize new item as unmarked.
+    public void mark() {
+        this.isDone = true;
     }
 
-    public void markItem(int index) {
-        if (index >= 0 && index < marked.size()) {
-            marked.set(index, true);  // Mark item as true.
-        }
+    public void unmark() {
+        this.isDone = false;
     }
 
-    public void unmarkItem(int index) {
-        if (index >= 0 && index < marked.size()) {
-            marked.set(index, false);  // Unmark item as false.
-        }
-    }
+    public abstract String getType();
 
-    public void printList() {
-        for (int i = 0; i < items.size(); i++) {
-            String status = marked.get(i) ? "[X] " : "[ ] ";
-            System.out.println("      " + (i + 1) + ". " + status + items.get(i));
-        }
-    }
-
-    public void printElement(int index) {
-        if (index >= 0 && index < items.size()) {
-            String status = marked.get(index) ? "[X] " : "[ ] ";
-            System.out.println("      " + (index + 1) + ". " + status + items.get(index));
-        } else {
-            System.out.println("      Invalid index.");
-        }
+    @Override
+    public String toString() {
+        String status = isDone ? "[X]" : "[ ]";
+        return status + " " + desc;
     }
 }
+
