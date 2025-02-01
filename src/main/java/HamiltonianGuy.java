@@ -89,7 +89,7 @@ public class HamiltonianGuy {
             taskList.addTask(new DeadlineTask(desc, by));
             System.out.println("      Added: " + desc + " (by: " + by + ")");
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new IllegalArgumentException("OOPS!!! Please provide a description and a deadline in the format: deadline <description> /by <time>");
+            throw new IllegalArgumentException("OOPS!!! Please provide a description and a deadline in the format: deadline <description> /by yyyy-MM-dd HHmm");
         }
     }
 
@@ -106,9 +106,10 @@ public class HamiltonianGuy {
             taskList.addTask(new EventTask(desc, from, to));
             System.out.println("      Added: " + desc + " (from: " + from + " to: " + to + ")");
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new IllegalArgumentException("OOPS!!! Please provide a description and times in the format: event <description> /from <start> /to <end>");
+            throw new IllegalArgumentException("OOPS!!! Please provide a description and times in the format: event <description> /from yyyy-MM-dd HHmm /to yyyy-MM-dd HHmm");
         }
     }
+
 
     private static void handleDeleteCommand(String input, TaskList taskList) {
         try {

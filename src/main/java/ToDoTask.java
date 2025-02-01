@@ -3,6 +3,10 @@ public class ToDoTask extends Task {
         super(desc);
     }
 
+    public ToDoTask(String description, boolean isDone) {
+        super(description, isDone);
+    }
+
     @Override
     public String getType() {
         return "[T]";

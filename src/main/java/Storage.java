@@ -1,42 +1,44 @@
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-    public class Storage{
-        private String filePath;
+public class Storage {
+    private String filePath;
 
-        public Storage(String filePath) {
-            this.filePath = filePath;
+    public Storage(String filePath) {
+        this.filePath = filePath;
+    }
+
+    /**
+     * Loads tasks from the file. If the file does not exist, returns an empty list.
+     */
+    public List<Task> load() {
+        List<Task> tasks = new ArrayList<>();
+        File file = new File(filePath);
+
+        if (!file.exists()) {
+            System.out.println("No existing save file found. Starting fresh.");
+            return tasks;  // Return an empty list
         }
 
-        /**
-         * Loads tasks from the file. If the file does not exist, returns an empty list.
-         */
-        public List<Task> load() {
-            List<Task> tasks = new ArrayList<>();
-            File file = new File(filePath);
-
-            if (!file.exists()) {
-                System.out.println("No existing save file found. Starting fresh.");
-                return tasks;  // Return an empty list
-            }
-
-            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    Task task = parseTask(line);
-                    if (task != null) {
-                        tasks.add(task);
-                    } else {
-                        System.out.println("Warning: Skipping corrupted entry -> " + line);
-                    }
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Task task = parseTask(line);
+                if (task != null) {
+                    tasks.add(task);
+                } else {
+                    System.out.println("Warning: Skipping corrupted entry -> " + line);
                 }
-            } catch (IOException e) {
-                System.out.println("Error reading the save file: " + e.getMessage());
             }
-
-            return tasks;
+        } catch (IOException e) {
+            System.out.println("Error reading the save file: " + e.getMessage());
         }
+
+        return tasks;
+    }
 
         /**
          * Saves the list of tasks to the file.
@@ -65,19 +67,23 @@ import java.util.List;
             }
 
             String type = parts[0];
-            boolean isDone = parts[1].equals("1");
+            boolean isDone = parts[1].equals("1"); // ✅ Read isDone from file
             String description = parts[2];
 
             switch (type) {
                 case "T":
-                    return new ToDoTask(description);
+                    return new ToDoTask(description, isDone);
                 case "D":
-                    return new DeadlineTask(description, parts[3]);
+                    return new DeadlineTask(description, LocalDateTime.parse(parts[3], DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm")), isDone);
                 case "E":
-                    return new EventTask(description, parts[3], parts[4]);
+                    return new EventTask(description,
+                            LocalDateTime.parse(parts[3], DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm")),
+                            LocalDateTime.parse(parts[4], DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm")),
+                            isDone);
                 default:
                     return null; // Invalid task type
             }
         }
     }
+
 

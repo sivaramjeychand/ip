@@ -7,6 +7,11 @@ public abstract class Task {
         this.isDone = false;
     }
 
+    public Task(String desc, boolean isDone) {
+        this.desc = desc;
+        this.isDone = isDone;
+    }
+
     public void mark() {
         if (isDone) {
             throw new IllegalStateException("OOPS!!! This task is already marked as done.");
