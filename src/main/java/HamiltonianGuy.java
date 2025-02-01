@@ -3,12 +3,13 @@ import java.util.Scanner;
 public class HamiltonianGuy {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        Storage storage = new Storage("./data/HamiltonianGuy.txt");
+        TaskList taskList = new TaskList(storage);
+
         System.out.println("______________________________________");
         System.out.println("Hello! I'm HamiltonianGuy.");
         System.out.println("What can I do for you?");
         System.out.println("______________________________________");
-
-        TaskList t = new TaskList();
 
         while (true) {
             try {
@@ -16,22 +17,22 @@ public class HamiltonianGuy {
                 if (input.equals("bye")) {
                     break;
                 } else if (input.equals("list")) {
-                    if(t.isEmpty()){
+                    if (taskList.isEmpty()) {
                         System.out.println("      OOPS!! The list is empty.");
                     }
-                    t.printList();
+                    taskList.printList();
                 } else if (input.startsWith("mark")) {
-                    handleMarkCommand(input, t);
+                    handleMarkCommand(input, taskList);
                 } else if (input.startsWith("unmark")) {
-                    handleUnmarkCommand(input, t);
+                    handleUnmarkCommand(input, taskList);
                 } else if (input.startsWith("todo")) {
-                    handleTodoCommand(input, t);
+                    handleTodoCommand(input, taskList);
                 } else if (input.startsWith("deadline")) {
-                    handleDeadlineCommand(input, t);
+                    handleDeadlineCommand(input, taskList);
                 } else if (input.startsWith("event")) {
-                    handleEventCommand(input, t);
-                } else if (input.startsWith("delete")){
-                    handleDeleteCommand(input, t);
+                    handleEventCommand(input, taskList);
+                } else if (input.startsWith("delete")) {
+                    handleDeleteCommand(input, taskList);
                 } else {
                     throw new IllegalArgumentException("OOPS!!! I'm sorry, but I don't know what that means :-(");
                 }

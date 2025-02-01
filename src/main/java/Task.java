@@ -23,6 +23,16 @@ public abstract class Task {
 
     public abstract String getType();
 
+    public abstract String toFileString();
+
+    public boolean isDone() {
+        return isDone;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
     @Override
     public String toString() {
         String status = isDone ? "[X]" : "[ ]";

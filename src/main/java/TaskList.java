@@ -1,15 +1,17 @@
-import java.util.ArrayList;
 import java.util.List;
 
 public class TaskList {
     private List<Task> tasks;
+    private Storage storage;
 
-    public TaskList() {
-        tasks = new ArrayList<>();
+    public TaskList(Storage storage) {
+        this.storage = storage;
+        this.tasks = storage.load(); // Load tasks on startup
     }
 
     public void addTask(Task task) {
         tasks.add(task);
+        storage.save(tasks); // Save after adding
     }
 
     public boolean isEmpty() {
@@ -19,6 +21,7 @@ public class TaskList {
     public void deleteTask(int index) {
         if (isValidIndex(index)) {
             Task removedTask = tasks.remove(index);
+            storage.save(tasks); // Save after deletion
             System.out.println("      Noted. I've removed this task:");
             System.out.println("        " + removedTask);
         }
@@ -26,25 +29,19 @@ public class TaskList {
 
     public void markTask(int index) {
         if (isValidIndex(index)) {
-            try {
-                tasks.get(index).mark();
-                System.out.println("      Nice! I've marked this task as done:");
-                System.out.println("      " + tasks.get(index));
-            } catch (IllegalStateException e) {
-                System.out.println("      " + e.getMessage());
-            }
+            tasks.get(index).mark();
+            storage.save(tasks); // Save after marking done
+            System.out.println("      Nice! I've marked this task as done:");
+            System.out.println("      " + tasks.get(index));
         }
     }
 
     public void unmarkTask(int index) {
         if (isValidIndex(index)) {
-            try {
-                tasks.get(index).unmark();
-                System.out.println("      OK, I've marked this task as not done yet:");
-                System.out.println("      " + tasks.get(index));
-            } catch (IllegalStateException e) {
-                System.out.println("      " + e.getMessage());
-            }
+            tasks.get(index).unmark();
+            storage.save(tasks); // Save after unmarking
+            System.out.println("      OK, I've marked this task as not done yet:");
+            System.out.println("      " + tasks.get(index));
         }
     }
 

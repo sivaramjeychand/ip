@@ -3,6 +3,13 @@ public class ToDoTask extends Task {
         super(description);
     }
 
+    public ToDoTask(String desc, boolean isDone) {
+        super(desc);
+        if (isDone) {
+            this.mark();
+        }
+    }
+
     @Override
     public String getType() {
         return "[T]";
@@ -11,5 +18,10 @@ public class ToDoTask extends Task {
     @Override
     public String toString() {
         return getType() + super.toString();
+    }
+
+    @Override
+    public String toFileString() {
+        return "T | " + (isDone() ? "1" : "0") + " | " + getDesc();
     }
 }
