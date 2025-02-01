@@ -1,8 +1,5 @@
-<<<<<<< HEAD:src/main/java/hamiltonianguy/TaskList.java
 package hamiltonianguy;
 
-=======
->>>>>>> branch-Level-7:src/main/java/TaskList.java
 import java.util.List;
 import hamiltonianguy.tasks.Task;
 import hamiltonianguy.storage.Storage;

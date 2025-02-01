@@ -28,20 +28,10 @@ public abstract class Task {
         this.isDone = false;
     }
 
-    public boolean isDone() {
-        return isDone;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
     public abstract String getType();
 
     public abstract String toFileString();
 
-<<<<<<< HEAD:src/main/java/hamiltonianguy/tasks/Task.java
-=======
     public boolean isDone() {
         return isDone;
     }
@@ -50,7 +40,7 @@ public abstract class Task {
         return desc;
     }
 
->>>>>>> branch-Level-7:src/main/java/Task.java
+
     @Override
     public String toString() {
         String status = isDone ? "[X]" : "[ ]";
