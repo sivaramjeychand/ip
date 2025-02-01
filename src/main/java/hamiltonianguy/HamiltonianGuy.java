@@ -4,8 +4,7 @@ import hamiltonianguy.tasks.*;
 import hamiltonianguy.storage.*;
 
 import java.util.Scanner;
-import hamiltonianguy.tasks.*;
-import hamiltonianguy.storage.*;
+
 
 /**
  * The main entry point for the HamiltonianGuy chatbot.
