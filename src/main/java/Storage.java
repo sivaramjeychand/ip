@@ -1,0 +1,79 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Storage {
+    private String filePath;
+
+    public Storage(String filePath) {
+        this.filePath = filePath;
+    }
+
+    /**
+     * Loads tasks from the file. If the file does not exist, returns an empty list.
+     */
+    public List<Task> load() {
+        List<Task> tasks = new ArrayList<>();
+        File file = new File(filePath);
+
+        if (!file.exists()) {
+            System.out.println("No existing save file found. Starting fresh.");
+            return tasks; // Return an empty list
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                Task task = parseTask(line);
+                if (task != null) {
+                    tasks.add(task);
+                } else {
+                    System.out.println("Warning: Skipping corrupted entry -> " + line);
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error reading the save file: " + e.getMessage());
+        }
+
+        return tasks;
+    }
+
+    /**
+     * Saves the list of tasks to the file.
+     */
+    public void save(List<Task> tasks) {
+        File file = new File(filePath);
+        file.getParentFile().mkdirs(); // Ensure the directory exists
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (Task task : tasks) {
+                writer.write(task.toFileString());
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving tasks: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Parses a task from the file format.
+     */
+    private Task parseTask(String line) {
+        String[] parts = line.split(" \\| ");
+        if (parts.length < 3) {
+            return null; // Corrupted entry
+        }
+
+        String type = parts[0];
+        boolean isDone = parts[1].equals("1");
+        String description = parts[2];
+
+        switch (type) {
+            case "T": return new ToDoTask(description, isDone);
+            case "D": return new DeadlineTask(description, parts[3], isDone);
+            case "E": return new EventTask(description, parts[3], parts[4], isDone);
+            default: return null; // Invalid task type
+        }
+    }
+}
+
