@@ -21,7 +21,17 @@ public abstract class Task {
         this.isDone = false;
     }
 
+    public boolean isDone() {
+        return isDone;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
     public abstract String getType();
+
+    public abstract String toFileString();
 
     @Override
     public String toString() {
