@@ -7,6 +7,11 @@ import java.util.Scanner;
 import hamiltonianguy.tasks.*;
 import hamiltonianguy.storage.*;
 
+/**
+ * The main entry point for the HamiltonianGuy chatbot.
+ * Handles user input and commands.
+ */
+
 public class HamiltonianGuy {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);

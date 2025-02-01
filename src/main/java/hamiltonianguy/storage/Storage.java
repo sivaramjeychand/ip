@@ -7,16 +7,29 @@ import java.util.ArrayList;
 import java.util.List;
 import hamiltonianguy.tasks.*;
 
+/**
+ * Handles saving and loading tasks to and from a file.
+ */
+
 public class Storage {
     private String filePath;
+
+    /**
+     * Constructs a Storage object with a specified file path.
+     *
+     * @param filePath The path of the file to store tasks.
+     */
 
     public Storage(String filePath) {
         this.filePath = filePath;
     }
 
     /**
-     * Loads tasks from the file. If the file does not exist, returns an empty list.
+     * Loads tasks from the storage file.
+     *
+     * @return A list of tasks loaded from the file.
      */
+
     public List<Task> load() {
         List<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
@@ -43,50 +56,54 @@ public class Storage {
         return tasks;
     }
 
-        /**
-         * Saves the list of tasks to the file.
-         */
-        public void save(List<Task> tasks) {
-            File file = new File(filePath);
-            file.getParentFile().mkdirs(); // Ensure the directory exists
+    /**
+     * Saves the list of tasks to the storage file.
+     *
+     * @param tasks The list of tasks to save.
+     */
 
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-                for (Task task : tasks) {
-                    writer.write(task.toFileString());
-                    writer.newLine();
-                }
-            } catch (IOException e) {
-                System.out.println("Error saving tasks: " + e.getMessage());
+    public void save(List<Task> tasks) {
+        File file = new File(filePath);
+        file.getParentFile().mkdirs(); // Ensure the directory exists
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (Task task : tasks) {
+                writer.write(task.toFileString());
+                writer.newLine();
             }
-        }
-
-        /**
-         * Parses a task from the file format.
-         */
-        private Task parseTask(String line) {
-            String[] parts = line.split(" \\| ");
-            if (parts.length < 3) {
-                return null; // Corrupted entry
-            }
-
-            String type = parts[0];
-            boolean isDone = parts[1].equals("1"); // ✅ Read isDone from file
-            String description = parts[2];
-
-            switch (type) {
-                case "T":
-                    return new ToDoTask(description, isDone);
-                case "D":
-                    return new DeadlineTask(description, LocalDateTime.parse(parts[3], DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm")), isDone);
-                case "E":
-                    return new EventTask(description,
-                            LocalDateTime.parse(parts[3], DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm")),
-                            LocalDateTime.parse(parts[4], DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm")),
-                            isDone);
-                default:
-                    return null; // Invalid task type
-            }
+        } catch (IOException e) {
+            System.out.println("Error saving tasks: " + e.getMessage());
         }
     }
+
+    /**
+     * Parses a task from the file format.
+     */
+
+    private Task parseTask(String line) {
+        String[] parts = line.split(" \\| ");
+        if (parts.length < 3) {
+            return null; // Corrupted entry
+        }
+
+        String type = parts[0];
+        boolean isDone = parts[1].equals("1"); // ✅ Read isDone from file
+        String description = parts[2];
+
+        switch (type) {
+            case "T":
+                return new ToDoTask(description, isDone);
+            case "D":
+                return new DeadlineTask(description, LocalDateTime.parse(parts[3], DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm")), isDone);
+            case "E":
+                return new EventTask(description,
+                        LocalDateTime.parse(parts[3], DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm")),
+                        LocalDateTime.parse(parts[4], DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm")),
+                        isDone);
+            default:
+                return null; // Invalid task type
+        }
+    }
+}
 
 
