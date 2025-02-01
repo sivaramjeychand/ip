@@ -1,4 +1,11 @@
+package hamiltonianguy;
+
+import hamiltonianguy.tasks.*;
+import hamiltonianguy.storage.*;
+
 import java.util.Scanner;
+import hamiltonianguy.tasks.*;
+import hamiltonianguy.storage.*;
 
 public class HamiltonianGuy {
     public static void main(String[] args) {

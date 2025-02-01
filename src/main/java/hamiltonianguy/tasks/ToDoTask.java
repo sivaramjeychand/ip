@@ -1,3 +1,5 @@
+package hamiltonianguy.tasks;
+
 public class ToDoTask extends Task {
     public ToDoTask(String desc) {
         super(desc);

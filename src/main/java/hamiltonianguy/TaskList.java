@@ -1,4 +1,8 @@
+package hamiltonianguy;
+
 import java.util.List;
+import hamiltonianguy.tasks.Task;
+import hamiltonianguy.storage.Storage;
 
 public class TaskList {
     private List<Task> tasks;

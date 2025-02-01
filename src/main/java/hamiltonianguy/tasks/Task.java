@@ -1,3 +1,5 @@
+package hamiltonianguy.tasks;
+
 public abstract class Task {
     private String desc;
     private boolean isDone;

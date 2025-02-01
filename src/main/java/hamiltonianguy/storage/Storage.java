@@ -1,8 +1,11 @@
+package hamiltonianguy.storage;
+
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import hamiltonianguy.tasks.*;
 
 public class Storage {
     private String filePath;
