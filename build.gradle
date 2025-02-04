@@ -12,7 +12,6 @@ dependencies {
     // JUnit testing
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.10.0'
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.10.0'
-
 }
 
 test {
@@ -30,14 +29,15 @@ test {
 }
 
 application {
-    mainClass.set("hamiltonianguy.HamiltonianGuy")
+    mainClass.set("hamiltonianguy.HamiltonianGuy") // Ensure this matches your actual package
 }
 
 shadowJar {
-    archiveBaseName = "duke"
+    archiveBaseName = "Hamiltonianguy"
     archiveClassifier = null
+    archiveVersion = "1.0"  // Optional: versioning for JAR files
 }
 
-run{
+run {
     standardInput = System.in
 }
