@@ -1,192 +1,102 @@
 package hamiltonianguy;
 
-import hamiltonianguy.tasks.*;
-import hamiltonianguy.storage.*;
+import hamiltonianguy.tasks.DeadlineTask;
+import hamiltonianguy.tasks.ToDoTask;
+import hamiltonianguy.tasks.Task;
+import hamiltonianguy.tasks.EventTask;
+import hamiltonianguy.storage.Storage;
 
-import java.util.Scanner;
-
-
-/**
- * The main entry point for the HamiltonianGuy chatbot.
- * Handles user input and commands.
- */
 
 public class HamiltonianGuy {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+
+    private TaskList taskList;
+
+    public HamiltonianGuy() {
         Storage storage = new Storage("./data/HamiltonianGuy.txt");
-        TaskList taskList = new TaskList(storage);
+        taskList = new TaskList(storage);
+    }
 
-        System.out.println("______________________________________");
-        System.out.println("Hello! I'm HamiltonianGuy.");
-        System.out.println("What can I do for you?");
-        System.out.println("______________________________________");
-
-        while (true) {
-            try {
-                String input = sc.nextLine().trim();
-                if (input.equals("bye")) {
-                    break;
-                } else if (input.equals("list")) {
-                    if (taskList.isEmpty()) {
-                        System.out.println("      OOPS!! The list is empty.");
-                    }
-                    taskList.printList();
-                } else if (input.startsWith("mark")) {
-                    handleMarkCommand(input, taskList);
-                } else if (input.startsWith("unmark")) {
-                    handleUnmarkCommand(input, taskList);
-                } else if (input.startsWith("todo")) {
-                    handleTodoCommand(input, taskList);
-                } else if (input.startsWith("deadline")) {
-                    handleDeadlineCommand(input, taskList);
-                } else if (input.startsWith("event")) {
-                    handleEventCommand(input, taskList);
-                } else if (input.startsWith("delete")) {
-                    handleDeleteCommand(input, taskList);
-                } else if (input.startsWith("find")) {
-                    handleFindCommand(input, taskList);
-                } else {
-                    throw new IllegalArgumentException("OOPS!!! I'm sorry, but I don't know what that means :-(");
-                }
-            } catch (IllegalArgumentException e) {
-                System.out.println("      " + e.getMessage());
-            } catch (Exception e) {
-                System.out.println("      OOPS!!! Something went wrong: " + e.getMessage());
+    /**
+     * Processes user input and returns a chatbot response.
+     *
+     * @param input The user's command.
+     * @return The chatbot's response.
+     */
+    public String getResponse(String input) {
+        try {
+            if (input.equals("bye")) {
+                return "Bye. Hope to see you again!";
+            } else if (input.equals("list")) {
+                return taskList.isEmpty() ? "OOPS!! The list is empty." : taskList.getTaskListAsString();
+            } else if (input.startsWith("mark")) {
+                return handleMarkCommand(input);
+            } else if (input.startsWith("unmark")) {
+                return handleUnmarkCommand(input);
+            } else if (input.startsWith("todo")) {
+                return handleTodoCommand(input);
+            } else if (input.startsWith("deadline")) {
+                return handleDeadlineCommand(input);
+            } else if (input.startsWith("event")) {
+                return handleEventCommand(input);
+            } else if (input.startsWith("delete")) {
+                return handleDeleteCommand(input);
+            } else {
+                return "OOPS!!! I'm sorry, but I don't know what that means :-(";
             }
-        }
-
-        System.out.println("      Bye. Hope to see you again!");
-        sc.close();
-    }
-
-    /**
-     * Handles the "mark" command.
-     *
-     * @param input The user input string.
-     * @param taskList The TaskList instance.
-     */
-
-    private static void handleMarkCommand(String input, TaskList taskList) {
-        try {
-            int index = Integer.parseInt(input.split(" ")[1]) - 1;
-            taskList.markTask(index);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("OOPS!!! Please provide a valid number for the task index.");
-        } catch (IndexOutOfBoundsException e) {
-            throw new IllegalArgumentException("OOPS!!! The task index is out of range.");
+        } catch (IllegalArgumentException e) {
+            return e.getMessage();
+        } catch (Exception e) {
+            return "OOPS!!! Something went wrong: " + e.getMessage();
         }
     }
 
-    /**
-     * Handles the "unmark" command.
-     *
-     * @param input The user input string.
-     * @param taskList The TaskList instance.
-     */
-
-    private static void handleUnmarkCommand(String input, TaskList taskList) {
-        try {
-            int index = Integer.parseInt(input.split(" ")[1]) - 1;
-            taskList.unmarkTask(index);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("OOPS!!! Please provide a valid number for the task index.");
-        } catch (IndexOutOfBoundsException e) {
-            throw new IllegalArgumentException("OOPS!!! The task index is out of range.");
-        }
+    // Modify existing command handlers to return responses as Strings
+    private String handleMarkCommand(String input) {
+        int index = Integer.parseInt(input.split(" ")[1]) - 1;
+        taskList.markTask(index);
+        return "Nice! I've marked this task as done.";
     }
 
-    /**
-     * Handles the "toDo" command.
-     *
-     * @param input The user input string.
-     * @param taskList The TaskList instance.
-     */
+    private String handleUnmarkCommand(String input) {
+        int index = Integer.parseInt(input.split(" ")[1]) - 1;
+        taskList.unmarkTask(index);
+        return "OK, I've marked this task as not done yet.";
+    }
 
-    private static void handleTodoCommand(String input, TaskList taskList) {
+    private String handleTodoCommand(String input) {
         String description = input.substring(4).trim();
         if (description.isEmpty()) {
             throw new IllegalArgumentException("OOPS!!! The description of a todo cannot be empty.");
         }
         taskList.addTask(new ToDoTask(description));
-        System.out.println("      Added: " + description);
+        return "Added: " + description;
     }
 
-    /**
-     * Handles the "deadline" command.
-     *
-     * @param input The user input string.
-     * @param taskList The TaskList instance.
-     */
-
-    private static void handleDeadlineCommand(String input, TaskList taskList) {
-        try {
-            String[] parts = input.substring(8).split(" /by ");
-            String desc = parts[0].trim();
-            String by = parts[1].trim();
-            if (desc.isEmpty() || by.isEmpty()) {
-                throw new IllegalArgumentException("OOPS!!! Both description and deadline must be provided.");
-            }
-            taskList.addTask(new DeadlineTask(desc, by));
-            System.out.println("      Added: " + desc + " (by: " + by + ")");
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new IllegalArgumentException("OOPS!!! Please provide a description and a deadline in the format: deadline <description> /by yyyy-MM-dd HHmm");
+    private String handleDeadlineCommand(String input) {
+        String[] parts = input.substring(8).split(" /by ");
+        if (parts.length < 2) {
+            throw new IllegalArgumentException("OOPS!!! Please provide a description and a deadline.");
         }
+        taskList.addTask(new DeadlineTask(parts[0].trim(), parts[1].trim()));
+        return "Added deadline task: " + parts[0].trim();
     }
 
-    /**
-     * Handles the "event" command.
-     *
-     * @param input The user input string.
-     * @param taskList The TaskList instance.
-     */
-
-    private static void handleEventCommand(String input, TaskList taskList) {
-        try {
-            String[] parts = input.substring(5).split(" /from ");
-            String desc = parts[0].trim();
-            String[] timeParts = parts[1].split(" /to ");
-            String from = timeParts[0].trim();
-            String to = timeParts[1].trim();
-            if (desc.isEmpty() || from.isEmpty() || to.isEmpty()) {
-                throw new IllegalArgumentException("OOPS!!! Description, start, and end times must be provided.");
-            }
-            taskList.addTask(new EventTask(desc, from, to));
-            System.out.println("      Added: " + desc + " (from: " + from + " to: " + to + ")");
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new IllegalArgumentException("OOPS!!! Please provide a description and times in the format: event <description> /from yyyy-MM-dd HHmm /to yyyy-MM-dd HHmm");
+    private String handleEventCommand(String input) {
+        String[] parts = input.substring(5).split(" /from ");
+        if (parts.length < 2) {
+            throw new IllegalArgumentException("OOPS!!! Please provide a description and event times.");
         }
+        String[] timeParts = parts[1].split(" /to ");
+        if (timeParts.length < 2) {
+            throw new IllegalArgumentException("OOPS!!! Please specify both start and end times.");
+        }
+        taskList.addTask(new EventTask(parts[0].trim(), timeParts[0].trim(), timeParts[1].trim()));
+        return "Added event task: " + parts[0].trim();
     }
 
-    /**
-     * Handles the "delete" command.
-     *
-     * @param input The user input string.
-     * @param taskList The TaskList instance.
-     */
-
-    private static void handleDeleteCommand(String input, TaskList taskList) {
-        try {
-            int index = Integer.parseInt(input.split(" ")[1]) - 1;
-            taskList.deleteTask(index);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("OOPS!!! Please provide a valid number for the task index.");
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new IllegalArgumentException("OOPS!!! Please specify the task to delete in the format: delete <index>");
-        }
-    }
-
-    /**
-     * Handles the "find" command.
-     *
-     * @param input The user input string.
-     * @param taskList The TaskList instance.
-     */
-    private static void handleFindCommand(String input, TaskList taskList) {
-        String keyword = input.substring(4).trim();
-        if (keyword.isEmpty()) {
-            throw new IllegalArgumentException("OOPS!!! Please specify a keyword to search for.");
-        }
-        taskList.findTask(keyword);
+    private String handleDeleteCommand(String input) {
+        int index = Integer.parseInt(input.split(" ")[1]) - 1;
+        taskList.deleteTask(index);
+        return "Task deleted.";
     }
 }

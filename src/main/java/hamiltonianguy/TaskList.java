@@ -94,10 +94,12 @@ public class TaskList {
      * Prints all tasks in the list.
      */
 
-    public void printList() {
+    public String getTaskListAsString() {
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println("      " + (i + 1) + ". " + tasks.get(i));
+            sb.append((i + 1)).append(". ").append(tasks.get(i)).append("\n");
         }
+        return sb.toString();
     }
 
     /**
