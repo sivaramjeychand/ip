@@ -65,7 +65,11 @@ public class Storage {
 
     public void save(List<Task> tasks) {
         File file = new File(filePath);
-        file.getParentFile().mkdirs(); // Ensure the directory exists
+        File parentDir = file.getParentFile();
+
+        if (parentDir != null) {
+            parentDir.mkdirs();
+        }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             for (Task task : tasks) {
@@ -76,6 +80,7 @@ public class Storage {
             System.out.println("Error saving tasks: " + e.getMessage());
         }
     }
+
 
     /**
      * Parses a task from the file format.

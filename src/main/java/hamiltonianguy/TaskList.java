@@ -144,4 +144,8 @@ public class TaskList {
         System.out.println("______________________________________");
     }
 
+    public int getSize() {
+        return tasks.size();
+    }
+
 }
