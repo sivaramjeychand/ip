@@ -29,13 +29,13 @@ test {
 }
 
 application {
-    mainClass.set("hamiltonianguy.HamiltonianGuy") // Ensure this matches your actual package
+    mainClass.set("hamiltonianguy.HamiltonianGuy")
 }
 
 shadowJar {
     archiveBaseName = "Hamiltonianguy"
     archiveClassifier = null
-    archiveVersion = "1.0"  // Optional: versioning for JAR files
+    archiveVersion = "1.0"
 }
 
 run {
