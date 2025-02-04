@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 T | 1 | siva
-T | 0 | siva
-T | 0 | siva
+T | 1 | siva
+T | 1 | siva
 D | 1 | return book | 2024-02-01 1800
-=======
 T | 1 | run
 T | 0 | eat
->>>>>>> branch-Level-7

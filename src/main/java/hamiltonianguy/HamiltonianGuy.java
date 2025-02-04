@@ -44,6 +44,8 @@ public class HamiltonianGuy {
                     handleEventCommand(input, taskList);
                 } else if (input.startsWith("delete")) {
                     handleDeleteCommand(input, taskList);
+                } else if (input.startsWith("find")) {
+                    handleFindCommand(input, taskList);
                 } else {
                     throw new IllegalArgumentException("OOPS!!! I'm sorry, but I don't know what that means :-(");
                 }
@@ -58,6 +60,13 @@ public class HamiltonianGuy {
         sc.close();
     }
 
+    /**
+     * Handles the "mark" command.
+     *
+     * @param input The user input string.
+     * @param taskList The TaskList instance.
+     */
+
     private static void handleMarkCommand(String input, TaskList taskList) {
         try {
             int index = Integer.parseInt(input.split(" ")[1]) - 1;
@@ -68,6 +77,13 @@ public class HamiltonianGuy {
             throw new IllegalArgumentException("OOPS!!! The task index is out of range.");
         }
     }
+
+    /**
+     * Handles the "unmark" command.
+     *
+     * @param input The user input string.
+     * @param taskList The TaskList instance.
+     */
 
     private static void handleUnmarkCommand(String input, TaskList taskList) {
         try {
@@ -80,6 +96,13 @@ public class HamiltonianGuy {
         }
     }
 
+    /**
+     * Handles the "toDo" command.
+     *
+     * @param input The user input string.
+     * @param taskList The TaskList instance.
+     */
+
     private static void handleTodoCommand(String input, TaskList taskList) {
         String description = input.substring(4).trim();
         if (description.isEmpty()) {
@@ -88,6 +111,13 @@ public class HamiltonianGuy {
         taskList.addTask(new ToDoTask(description));
         System.out.println("      Added: " + description);
     }
+
+    /**
+     * Handles the "deadline" command.
+     *
+     * @param input The user input string.
+     * @param taskList The TaskList instance.
+     */
 
     private static void handleDeadlineCommand(String input, TaskList taskList) {
         try {
@@ -103,6 +133,13 @@ public class HamiltonianGuy {
             throw new IllegalArgumentException("OOPS!!! Please provide a description and a deadline in the format: deadline <description> /by yyyy-MM-dd HHmm");
         }
     }
+
+    /**
+     * Handles the "event" command.
+     *
+     * @param input The user input string.
+     * @param taskList The TaskList instance.
+     */
 
     private static void handleEventCommand(String input, TaskList taskList) {
         try {
@@ -121,6 +158,12 @@ public class HamiltonianGuy {
         }
     }
 
+    /**
+     * Handles the "delete" command.
+     *
+     * @param input The user input string.
+     * @param taskList The TaskList instance.
+     */
 
     private static void handleDeleteCommand(String input, TaskList taskList) {
         try {
@@ -131,5 +174,19 @@ public class HamiltonianGuy {
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new IllegalArgumentException("OOPS!!! Please specify the task to delete in the format: delete <index>");
         }
+    }
+
+    /**
+     * Handles the "find" command.
+     *
+     * @param input The user input string.
+     * @param taskList The TaskList instance.
+     */
+    private static void handleFindCommand(String input, TaskList taskList) {
+        String keyword = input.substring(4).trim();
+        if (keyword.isEmpty()) {
+            throw new IllegalArgumentException("OOPS!!! Please specify a keyword to search for.");
+        }
+        taskList.findTask(keyword);
     }
 }
