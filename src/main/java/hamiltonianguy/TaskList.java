@@ -122,29 +122,26 @@ public class TaskList {
     }
 
     /**
-     * Finds and displays tasks that contain the specified keyword.
+     * Searches for tasks that contain the specified keyword.
      *
-     * @param keyword The word to search for in task descriptions.
+     * @param keyword The keyword to search for.
+     * @return A list of matching tasks.
      */
-    public void findTask(String keyword) {
-        System.out.println("______________________________________");
-        System.out.println("Here are the matching tasks in your list:");
+    public String findTasks(String keyword) {
+        StringBuilder result = new StringBuilder();
+        result.append("Here are the matching tasks in your list:\n");
 
         boolean found = false;
         for (int i = 0; i < tasks.size(); i++) {
-            Task task = tasks.get(i);
-            if (task.getDesc().toLowerCase().contains(keyword.toLowerCase())) {
-                System.out.println((i + 1) + ". " + task);
+            if (tasks.get(i).toString().toLowerCase().contains(keyword.toLowerCase())) {
+                result.append((i + 1)).append(". ").append(tasks.get(i)).append("\n");
                 found = true;
             }
         }
 
-        if (!found) {
-            System.out.println("No matching tasks found.");
-        }
-
-        System.out.println("______________________________________");
+        return found ? result.toString() : "No matching tasks found.";
     }
+
 
     public int getSize() {
         return tasks.size();

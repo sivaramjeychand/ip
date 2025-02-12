@@ -40,6 +40,9 @@ public class HamiltonianGuy {
                 return handleEventCommand(input);
             } else if (input.startsWith("delete")) {
                 return handleDeleteCommand(input);
+            } else if (input.startsWith("find ")) {
+                String keyword = input.substring(5).trim();
+                return taskList.findTasks(keyword);
             } else {
                 return "OOPS!!! I'm sorry, but I don't know what that means :-(";
             }
