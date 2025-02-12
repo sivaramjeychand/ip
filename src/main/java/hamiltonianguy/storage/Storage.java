@@ -1,11 +1,19 @@
 package hamiltonianguy.storage;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import hamiltonianguy.tasks.*;
+import hamiltonianguy.tasks.DeadlineTask;
+import hamiltonianguy.tasks.ToDoTask;
+import hamiltonianguy.tasks.Task;
+import hamiltonianguy.tasks.EventTask;
 
 /**
  * Handles saving and loading tasks to and from a file.
@@ -93,7 +101,7 @@ public class Storage {
         }
 
         String type = parts[0];
-        boolean isDone = parts[1].equals("1"); // ✅ Read isDone from file
+        boolean isDone = parts[1].equals("1"); //Read isDone from file
         String description = parts[2];
 
         switch (type) {
