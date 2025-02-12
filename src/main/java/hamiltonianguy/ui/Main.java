@@ -1,18 +1,21 @@
 package hamiltonianguy.ui;
 
+import hamiltonianguy.HamiltonianGuy;
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.VBox;
-import javafx.scene.layout.HBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-import hamiltonianguy.HamiltonianGuy;
-
-
 
 public class Main extends Application {
 
-    private TextArea chatDisplay;
+    private VBox chatContainer;
     private TextField userInput;
     private HamiltonianGuy chatbot;
 
@@ -20,32 +23,33 @@ public class Main extends Application {
     public void start(Stage stage) {
         chatbot = new HamiltonianGuy();
 
-        // 🔹 Chat display area
-        chatDisplay = new TextArea();
-        chatDisplay.setEditable(false);
-        chatDisplay.setWrapText(true);
-        chatDisplay.setPrefHeight(400);
+        // 🔹 Chat container (VBox for messages)
+        chatContainer = new VBox(10);
+        chatContainer.setPadding(new Insets(10));
+        chatContainer.setStyle("-fx-background-color: #f5f5f5;");
+        ScrollPane scrollPane = new ScrollPane(chatContainer);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
-        // 🔹 Input field
+        // 🔹 Input field and send button
         userInput = new TextField();
         userInput.setPromptText("Type a message...");
-
-        // 🔹 Send button
         Button sendButton = new Button("Send");
         sendButton.setOnAction(event -> handleUserInput());
 
-        // 🔹 Layout: Input field + Button
         HBox inputArea = new HBox(10, userInput, sendButton);
+        inputArea.setPadding(new Insets(10));
+        inputArea.setAlignment(Pos.CENTER);
 
         // 🔹 Main layout
-        VBox layout = new VBox(10, chatDisplay, inputArea);
-        layout.setStyle("-fx-padding: 10px;");
-
-        // 🔹 Scene setup
+        VBox layout = new VBox(10, scrollPane, inputArea);
         Scene scene = new Scene(layout, 500, 500);
         stage.setTitle("HamiltonianGuy Chatbot");
         stage.setScene(scene);
         stage.show();
+
+        // ✅ Show welcome message when starting the chat
+        showWelcomeMessage();
     }
 
     /**
@@ -54,13 +58,55 @@ public class Main extends Application {
     private void handleUserInput() {
         String input = userInput.getText().trim();
         if (!input.isEmpty()) {
-            chatDisplay.appendText("You: " + input + "\n");
-            chatDisplay.appendText("---------------------------------------" + "\n");
+            addMessage(input, true);
             String response = chatbot.getResponse(input);
-            chatDisplay.appendText("HamiltonianGuy: " + "\n" + response + "\n");
-            chatDisplay.appendText("---------------------------------------" + "\n");
+            addMessage(response, false);
             userInput.clear();
         }
+    }
+
+    /**
+     * Adds a message to the chat display, aligning based on sender.
+     *
+     * @param text The message text.
+     * @param isUser If true, aligns right (user message). Otherwise, aligns left (bot response).
+     */
+    private void addMessage(String text, boolean isUser) {
+        Text messageText = new Text(text);
+        TextFlow textFlow = new TextFlow(messageText);
+        textFlow.setPadding(new Insets(10));
+        textFlow.setStyle("-fx-background-color: " + (isUser ? "#A3D4FF" : "#FFFFFF") +
+                "; -fx-background-radius: 10px;");
+
+        HBox messageContainer = new HBox(textFlow);
+        messageContainer.setPadding(new Insets(5));
+
+        if (isUser) {
+            messageContainer.setAlignment(Pos.CENTER_RIGHT);
+        } else {
+            messageContainer.setAlignment(Pos.CENTER_LEFT);
+        }
+
+        chatContainer.getChildren().add(messageContainer);
+    }
+
+    /**
+     * Displays a welcome message with a logo.
+     */
+    private void showWelcomeMessage() {
+        Image logo = new Image(getClass().getResourceAsStream("/images/logo.jpg"));
+        ImageView logoView = new ImageView(logo);
+        logoView.setFitWidth(80);
+        logoView.setFitHeight(80);
+
+        Label welcomeLabel = new Label("Hello! I'm HamiltonianGuy.\nHow can I assist you today?");
+        welcomeLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
+
+        VBox welcomeBox = new VBox(10, logoView, welcomeLabel);
+        welcomeBox.setAlignment(Pos.CENTER);
+        welcomeBox.setPadding(new Insets(10));
+
+        chatContainer.getChildren().add(welcomeBox);
     }
 
     public static void main(String[] args) {

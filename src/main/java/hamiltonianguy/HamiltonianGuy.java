@@ -23,6 +23,7 @@ public class HamiltonianGuy {
      * @return The chatbot's response.
      */
     public String getResponse(String input) {
+        assert input != null && !input.trim().isEmpty() : "Input command cannot be null or empty";
         try {
             if (input.equals("bye")) {
                 return "Bye. Hope to see you again!";
@@ -40,6 +41,9 @@ public class HamiltonianGuy {
                 return handleEventCommand(input);
             } else if (input.startsWith("delete")) {
                 return handleDeleteCommand(input);
+            } else if (input.startsWith("find ")) {
+                String keyword = input.substring(5).trim();
+                return taskList.findTasks(keyword);
             } else {
                 return "OOPS!!! I'm sorry, but I don't know what that means :-(";
             }

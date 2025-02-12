@@ -65,12 +65,11 @@ public class Storage {
 
     public void save(List<Task> tasks) {
         File file = new File(filePath);
-        File parentDir = file.getParentFile();
+        assert file.getParentFile() != null : "Storage directory is missing!";
 
-        if (parentDir != null) {
-            parentDir.mkdirs();
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
         }
-
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             for (Task task : tasks) {
                 writer.write(task.toFileString());
@@ -80,6 +79,7 @@ public class Storage {
             System.out.println("Error saving tasks: " + e.getMessage());
         }
     }
+
 
 
     /**
