@@ -23,6 +23,7 @@ public class HamiltonianGuy {
      * @return The chatbot's response.
      */
     public String getResponse(String input) {
+        assert input != null && !input.trim().isEmpty() : "Input command cannot be null or empty";
         try {
             if (input.equals("bye")) {
                 return "Bye. Hope to see you again!";

@@ -52,12 +52,10 @@ public class TaskList {
      */
 
     public void deleteTask(int index) {
-        if (isValidIndex(index)) {
-            Task removedTask = tasks.remove(index);
-            storage.save(tasks); // Save after deletion
-            System.out.println("      Noted. I've removed this task:");
-            System.out.println("        " + removedTask);
-        }
+        assert index >= 0 && index < tasks.size() : "Invalid index for task deletion";
+        Task removedTask = tasks.remove(index);
+        System.out.println("Noted. I've removed this task:");
+        System.out.println("  " + removedTask);
     }
 
     /**
