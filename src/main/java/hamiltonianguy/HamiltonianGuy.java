@@ -44,6 +44,9 @@ public class HamiltonianGuy {
             } else if (input.startsWith("find ")) {
                 String keyword = input.substring(5).trim();
                 return taskList.findTasks(keyword);
+            } if (input.equals("sort")) {
+                taskList.sortTasksByDeadline();
+                return "Tasks sorted by deadline.";
             } else {
                 return "OOPS!!! I'm sorry, but I don't know what that means :-(";
             }

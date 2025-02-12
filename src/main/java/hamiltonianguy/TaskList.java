@@ -2,7 +2,11 @@ package hamiltonianguy;
 
 import java.util.List;
 import hamiltonianguy.tasks.Task;
+import hamiltonianguy.tasks.DeadlineTask;
 import hamiltonianguy.storage.Storage;
+import java.util.Comparator;
+import java.util.stream.Collectors;
+
 
 /**
  * Represents a list of tasks in the chatbot.
@@ -43,6 +47,19 @@ public class TaskList {
 
     public boolean isEmpty() {
         return tasks.isEmpty();
+    }
+
+    public void sortTasksByDeadline() {
+        List<Task> sortedTasks = tasks.stream()
+                .filter(task -> task instanceof DeadlineTask)
+                .map(task -> (DeadlineTask) task)
+                .sorted(Comparator.comparing(DeadlineTask::getBy))
+                .collect(Collectors.toList());
+
+        tasks.removeIf(task -> task instanceof DeadlineTask);
+        tasks.addAll(sortedTasks);
+
+        System.out.println("Tasks have been sorted by deadline.");
     }
 
     /**
