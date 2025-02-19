@@ -26,6 +26,7 @@ public class HamiltonianGuy {
         assert input != null && !input.trim().isEmpty() : "Input command cannot be null or empty";
         try {
             if (input.equals("bye")) {
+
                 return "Bye. Hope to see you again!";
             } else if (input.equals("list")) {
                 return taskList.isEmpty() ? "OOPS!! The list is empty." : taskList.getTaskListAsString();

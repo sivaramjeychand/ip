@@ -12,26 +12,27 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import javafx.application.Platform;
 
 public class Main extends Application {
 
     private VBox chatContainer;
     private TextField userInput;
     private HamiltonianGuy chatbot;
+    private ScrollPane scrollPane;
 
     @Override
     public void start(Stage stage) {
         chatbot = new HamiltonianGuy();
 
-        // 🔹 Chat container (VBox for messages)
         chatContainer = new VBox(10);
         chatContainer.setPadding(new Insets(10));
         chatContainer.setStyle("-fx-background-color: #f5f5f5;");
+
         ScrollPane scrollPane = new ScrollPane(chatContainer);
         scrollPane.setFitToWidth(true);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
 
-        // 🔹 Input field and send button
         userInput = new TextField();
         userInput.setPromptText("Type a message...");
         Button sendButton = new Button("Send");
@@ -41,14 +42,12 @@ public class Main extends Application {
         inputArea.setPadding(new Insets(10));
         inputArea.setAlignment(Pos.CENTER);
 
-        // 🔹 Main layout
         VBox layout = new VBox(10, scrollPane, inputArea);
         Scene scene = new Scene(layout, 500, 500);
         stage.setTitle("HamiltonianGuy Chatbot");
         stage.setScene(scene);
         stage.show();
 
-        // ✅ Show welcome message when starting the chat
         showWelcomeMessage();
     }
 
@@ -57,13 +56,24 @@ public class Main extends Application {
      */
     private void handleUserInput() {
         String input = userInput.getText().trim();
+
         if (!input.isEmpty()) {
-            addMessage(input, true);
+            HBox userMessage = addMessage(input, true);  // User message (right-aligned)
+            chatContainer.getChildren().add(userMessage);
+
             String response = chatbot.getResponse(input);
-            addMessage(response, false);
+            HBox botMessage = addMessage(response, false); // Bot message (left-aligned)
+            chatContainer.getChildren().add(botMessage);
+
+            Platform.runLater(() -> {
+                scrollPane.setVvalue(1.0);  // Forces scroll to bottom
+            });
+
             userInput.clear();
         }
     }
+
+
 
     /**
      * Adds a message to the chat display, aligning based on sender.
@@ -71,24 +81,39 @@ public class Main extends Application {
      * @param text The message text.
      * @param isUser If true, aligns right (user message). Otherwise, aligns left (bot response).
      */
-    private void addMessage(String text, boolean isUser) {
-        Text messageText = new Text(text);
-        TextFlow textFlow = new TextFlow(messageText);
+    private HBox addMessage(String text, boolean isUser) {
+        Label messageLabel = new Label(text);
+        messageLabel.setWrapText(true);
+        messageLabel.setMaxWidth(250);
+        TextFlow textFlow = new TextFlow(messageLabel);
         textFlow.setPadding(new Insets(10));
-        textFlow.setStyle("-fx-background-color: " + (isUser ? "#A3D4FF" : "#FFFFFF") +
-                "; -fx-background-radius: 10px;");
+        textFlow.setMaxWidth(300);
 
-        HBox messageContainer = new HBox(textFlow);
-        messageContainer.setPadding(new Insets(5));
 
         if (isUser) {
+            textFlow.setStyle("-fx-background-color: #D1E8FF; -fx-background-radius: 10px;");
+        } else {
+            textFlow.setStyle("-fx-background-color: #E6E6E6; -fx-background-radius: 10px;");
+        }
+
+        ImageView avatar = new ImageView(new Image(
+                isUser ? "/images/logo2.png" : "/images/logo.jpg"
+        ));
+        avatar.setFitHeight(50);
+        avatar.setFitWidth(50);
+
+        HBox messageContainer = new HBox(10);
+        if (isUser) {
+            messageContainer.getChildren().addAll(textFlow, avatar); // User on right
             messageContainer.setAlignment(Pos.CENTER_RIGHT);
         } else {
+            messageContainer.getChildren().addAll(avatar, textFlow); // Bot on left
             messageContainer.setAlignment(Pos.CENTER_LEFT);
         }
 
-        chatContainer.getChildren().add(messageContainer);
+        return messageContainer;
     }
+
 
     /**
      * Displays a welcome message with a logo.

@@ -71,6 +71,7 @@ public class TaskList {
     public void deleteTask(int index) {
         assert index >= 0 && index < tasks.size() : "Invalid index for task deletion";
         Task removedTask = tasks.remove(index);
+        storage.save(tasks);
         System.out.println("Noted. I've removed this task:");
         System.out.println("  " + removedTask);
     }
