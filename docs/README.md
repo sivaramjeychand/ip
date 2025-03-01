@@ -53,7 +53,7 @@ Welcome to **HamiltonianGuy**, your chatbot that helps you manage tasks efficien
 
 ## **🔧 Setup Guide for Developers**
 ### **🛠️ Prerequisites**
-- **Java 17** or later must be installed.
+- **Java 17** must be installed as newer versions do not support Javafx.
 - Ensure you have **Gradle** installed.
 
 ### **🚀 Building the Project**
