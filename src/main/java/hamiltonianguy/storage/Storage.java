@@ -101,7 +101,7 @@ public class Storage {
         }
 
         String type = parts[0];
-        boolean isDone = parts[1].equals("1"); //Read isDone from file
+        boolean isDone = parts[1].equals("1");
         String description = parts[2];
 
         switch (type) {
@@ -115,7 +115,7 @@ public class Storage {
                         LocalDateTime.parse(parts[4], DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm")),
                         isDone);
             default:
-                return null; // Invalid task type
+                return null; 
         }
     }
 }
